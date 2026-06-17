@@ -4,6 +4,9 @@ from feature_engineering import FeatureEngineer
 
 from delay_model import DelayModel
 
+from sklearn.model_selection import RandomizedSearchCV
+from xgboost import XGBClassifier
+
 df=pd.read_csv(r"C:\Users\loneo\OneDrive\Documents\delivery-delay-predictor\data\processed\df.csv")
 print(df.shape)
 
@@ -52,8 +55,7 @@ print(y_train.shape)
 y_test= y.iloc[split_index:]
 print(y_test.shape)
 
-model = DelayModel(X_train,X_test, y_train,y_test)
-
+model = DelayModel(X_train, X_test, y_train, y_test)
 y_pred = model.train_catboost()
 cat_metrics = model.evaluate_model(y_pred)
 print(cat_metrics)
@@ -65,10 +67,26 @@ print(rf_metrics)
 y_pred = model.train_xgboost()
 xgb_metrics = model.evaluate_model(y_pred)
 print(xgb_metrics)
+'''for threshold in [0.5, 0.4, 0.3, 0.2]:
+    y_pred = model.predict_xgboost_threshold(threshold)
+    metrics = model.evaluate_model(y_pred)
+    print(f"\nThreshold = {threshold}")
+    print(metrics)
+print(model.xgb_model.feature_importances_)
+feature_importance = pd.DataFrame({
+    'feature': X_train.columns,
+    'importance': model.xgb_model.feature_importances_
+})
+
+feature_importance = feature_importance.sort_values(by='importance',ascending=False)
+print(processed_df.groupby('customer_state_SP')['delay_flag'].mean())
+
+print(feature_importance.head(10))'''
 
 y_pred = model.train_logistic_regression()
 lr_metrics = model.evaluate_model(y_pred)
 print(lr_metrics)
+
 
 comparison_df = pd.DataFrame({
     'Model': [
@@ -108,23 +126,17 @@ comparison_df = pd.DataFrame({
 print(comparison_df)
 comparison_df.to_csv(r"C:\Users\loneo\OneDrive\Documents\delivery-delay-predictor\results\model_comparison.csv",index=False)
 
-model = DelayModel(X_train, X_test, y_train, y_test)
-
-y_pred = model.train_xgboost()
-
-xgb_metrics = model.evaluate_model(y_pred)
-print(xgb_metrics)
 
 import pickle
 
 # Save model
-with open(r"C:\Users\loneo\OneDrive\Documents\delivery-delay-predictor\models\xgboost_baseline.pkl","wb") as f:
-    pickle.dump(model.xgb_model, f)
+with open(r"C:\Users\loneo\OneDrive\Documents\delivery-delay-predictor\models\catboost_baseline.pkl","wb") as f:
+   pickle.dump(model.cbc_model, f)
 
 print("Model saved successfully!")
 
 
-with open(r"C:\Users\loneo\OneDrive\Documents\delivery-delay-predictor\models\xgboost_baseline.pkl","rb") as f:
-    loaded_model = pickle.load(f)
+with open(r"C:\Users\loneo\OneDrive\Documents\delivery-delay-predictor\models\catboost_baseline.pkl","rb") as f:
+   loaded_model = pickle.load(f)
 
 print(type(loaded_model))
