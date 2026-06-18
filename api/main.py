@@ -33,7 +33,7 @@ class PredictionResponse(BaseModel):
 def health():
     return {"status": "healthy"}
 
-with open(r"C:\Users\loneo\OneDrive\Documents\delivery-delay-predictor\models\catboost_baseline.pkl", "rb") as f:
+with open("models/catboost_baseline.pkl", "rb") as f:
     model=pickle.load(f)
 
 @app.get("/model-info")
