@@ -97,7 +97,22 @@ Hyperparameter tuning and threshold optimization were performed to improve minor
 | CatBoost            | 0.8660   | 0.0825    | 0.1900 | 0.1150   |
 
 CatBoost achieved the best overall balance between precision and recall after tuning and was selected for deployment through the FastAPI service.
+
+### Model Comparison
+
+![Accuracy Comparison](results/Accuracy.png)
+
+![Precision Comparison](results/precision.png)
+
+![Recall Comparison](results/recall.png)
+
+![F1 Comparison](results/f1_comparison.png)
+
 ## FastAPI Endpoints
+
+### API Demonstration
+
+![Swagger UI](results/screenshots/swagger_ui.png)
 
 ### GET /
 
@@ -179,6 +194,9 @@ Swagger Documentation:
 ```text
 http://localhost:8000/docs
 ```
+### Docker Container Running
+
+![Docker Container](results/screenshots/docker_container.png)
 
 ## How to Run Locally
 
@@ -232,5 +250,7 @@ https://github.com/omkar-1210
 Project built using Python, CatBoost, FastAPI, Docker, and the Olist E-commerce Dataset.
 
 
-* delay_flag = 1 → Order delivered late
-* delay_flag = 0 → Order delivered on time
+Target Variable:
+
+- delay_flag = 1 → Order delivered late
+- delay_flag = 0 → Order delivered on time
